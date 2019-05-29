@@ -397,6 +397,96 @@ spec:
           methods to reflect that</h1>
         </section>
 
+        <section> <!-- Architectures on the cloud -->
+        <section
+          data-background='https://farm1.staticflickr.com/183/432422744_be08c2ba07_b_d.jpg'>
+          <h1>Traditional architectures are monolitic</h1>
+		<aside class='notes'>Las aplicaciones habituales son
+	      como este monolito. Un tocho, difícilmente escalable,
+	      difícilmente desplegable, todo en un mismo ordenador,
+	      herramientas súper clásicas. No es que no se pueda usar
+	      para trabajar con datos de forma (más o menos) masiva,
+		  pero sobre todo por temas de escalado se complica bastante.</aside>
+	      </section>
+
+	      <section data-background='img/Edimburgo.jpg'
+	               alt='monolito y nubes'>
+                <h1>Modern, cloud native architectures are distributed</h1>
+		<aside class='notes'>Aquí se ve por un lado el
+	      monolito, que vendría a ser la arquitectura clásica, y
+	      las nubes, pero están separados unos de otros. Como en <a
+	      href='http://www.slideshare.net/jjmerelo/clipboards/data-cloud'>esta
+		  transparencia</a>, lo esencial es la separación
+	      entre datos y computación y el uso de contenedores y
+	      máquinas virtuales, en vez de usar "bare metal" o
+		  clusters/grid</aside>
+	      </section>
+
+	      <section data-background='img/Oporto.jpg' alt='Nubes
+	      negras y sol y todo'>
+                <h1>AI computing architectures need to be on the cloud</h1>
+		<aside class='notes'><a
+		  href='http://www.infoworld.com/article/2905917/big-data/big-data-is-all-about-the-cloud.html'>Big
+		  data is all about the cloud</a> y nada más que la
+		  nube. Hablar de Hadoop o de OpenStack es perder
+		  totalmente de vista el objetivo: crear arquitecturas que
+		  se adapten a este ambiente multi-propietario,
+		  auto-escalable, efímero y heterogéneo.  </aside>
+	      </section>
+	      
+	      <section data-background='img/cluster.jpg'
+	               alt='microservicios'><h1>And based on microservices</h1>
+		<aside class='notes'>Por eso hay que aprender
+	      arquitecturas como las de microservicios, en los que
+	      diferentes procesadores, conectados de forma ligera,
+		  procesan los datos compartiendo un bus. Estos
+	      "proveedores de servicios" o "procesadores" pueden
+	      escalarse fácilmente, desplegarse fácilmente, y
+	      adaptarse mucho mejor a un entorno de trabajo de
+	      despliegue continuo donde se procesan cientos de datos
+	      de cientos de formas diferentes, según su necesidad y su
+	      precio.</aside>
+	      </section>
+
+	      <section data-background='img/streams.jpg'
+	               alt='procesamiento en streams'><h1>Processing streams</h1>
+		<aside class='notes'>Procesamiento por flujos, eventos
+		  o cosas por el estilo. Se puede combinar
+	      perfectamente con lo anterior.</aside>
+	      </section>
+
+	      <section
+	      data-background='https://farm1.staticflickr.com/165/424839429_a378f13117_b_d.jpg'
+alt='troncos y nubes'><h1>Using kappa and other architectures</h1>
+		<aside class='notes'>Por ejemplo, la <a
+		  href='http://milinda.pathirage.org/kappa-architecture.com/'>arquitectura
+	      Kappa</a>, en la que todo es un flujo pero donde el
+	      elemento central es el log o registro, es un tipo de
+	      arquitectura de procesamiento de datos que se adapta a
+	      la nube. Y que hay que ir aprendiendo: Kappa, Kafka, y
+	      cosas como Apache Samza o Flink o cosas por el
+	      estilo. Nuevas formas de computación, nuevas formas de
+		  procesamiento de datos, traídas por la nube,
+		  incluyendo <em>big data</em>em> o <em>data as a
+	      service</em>, plataformas que ofrecen integración de
+	      datos de diferentes fuentes, incluyendo datos
+	      abiertos. Por ejemplo, sería interesante integrar los
+		  <a href='http://opendata.ugr.es'>datos de la
+	      UGR</a>, con los de otras universidades para ver
+	      tendencias en investigación o en matriculación en la
+	      universidad y ofrecerlo como servicio. </aside>
+	      </section>
+
+              <section><img
+        src='https://jonboulineau.me/assets/images/kappa_simple.jpg'
+        alt='Kappa architecture'>
+                <p>Image by <a
+                  href='https://www.linkedin.com/pulse/from-lambda-architecture-kappa-using-apache-beam-siddharth-mittal/'>Diddharth
+                  Mittal</a></p>
+              </section>
+        </section>
+
+
 
         <!-- Credits  -->
         <section><h1>Credits</h1>
