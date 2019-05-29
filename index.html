@@ -111,10 +111,294 @@
           </section>
           
         </section>
-        
-	<section><h1>What is the cloud</h1></section>
-        <section><h1>What is cloud native</h1></section>
 
+
+        <section>
+	  <section data-background='https://live.staticflickr.com/1870/44318581362_aaf64a96dc_k_d.jpg'><h1>Cloud computing ⇒ Working with <strong>virtualized</strong>
+              resources</h1>
+
+            <aside class='notes'>These are fake clouds in the Venice
+        casino in las Vegas. Cloud resources are virtualized
+        resources, not real ones. They belong to someone else,
+        too. RMS said "The cloud is someone's else computer", and it's
+            mostly true. But you can have your own cloud (or a
+            hybrid), too. Virtualizing resources allows you to
+        leverage all your infrastructure, or only pay for what you are
+        actually using, depending on the model.
+          </aside>
+          </section>
+
+	  <section data-background='https://live.staticflickr.com/7806/47509366032_aae8a1ae21_k_d.jpg'>
+	    <h2>Virtual machines, storage, data stores, message queues, logging, networks, data analysis, identity management...</h2>
+	    
+
+	    <aside class='notes'>This means that it's not only virtual machines or storage. There's a whole lot of stuff, at many different conceptual levels.</aside>
+	  </section>
+
+	</section>
+
+	<section>
+          <section data-background='https://live.staticflickr.com/1543/26116201655_c06d273e51_k_d.jpg'><h1><strong>The</strong> current technology for
+	  designing, building, testing and deploying
+	      applications</h1>
+
+	  </section>
+
+	  <section
+	  data-background='https://live.staticflickr.com/7865/47562364091_fcd379e496_k_d.jpg'><h1>Mainframes
+	    → Desktop → Servers → Cloud</h1></section>
+
+          <section data-background='https://live.staticflickr.com/7823/46846837534_26f3606bdf_k_d.jpg'><h1>Software engineering needs
+	    to <strong>change</strong> with that.</h1>
+          </section>
+	</section>
+
+	<section data-background='https://live.staticflickr.com/87/241952383_f413b93fdc_o_d.jpg'>
+	  <h1>Everything starts with git</h1>
+	  <aside class='notes'>Source control systems are not simply a convenience for developing software. They are the backbone of software development in the cloud, using the actions of commits and push as triggers for workflows that eventually end in deployment.</aside>
+	</section>
+	<section>
+          <section
+             data-background='https://live.staticflickr.com/7805/32615246827_574b6dbbbd_h_d.jpg'><h1>Infrastructure
+              as <strong>code</strong></h1></section>
+
+	  <section><h1>From the simple...</h1>
+	    <pre><code>az group create -l westeurope -n CCGroupEU
+az vm create -g CCGroupEU -n bobot --image UbuntuLTS
+	    </code></pre>
+
+	    <aside class='notes'>Using a simple shell script to tap the API of Azure and create a virtual machine with Ubuntu.</aside>
+	  </section>
+
+	  <section><h1>... to the slightly more complex ...</h1>
+	    <pre><code>{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": { "value": "westeurope"  },
+        "accountType": { "value": " Standard_LRS"  },
+        "kind": { "value": "StorageV2" },
+        "accessTier": { "value": "Cool"   },
+        "supportsHttpsTrafficOnly": { "value": true   }
+    }
+}</code></pre>
+	  </section>
+
+	  <section><h1> ... through the more abstract .. </h1>
+	    <pre><code>Vagrant.configure("2") do |config|
+  config.vm.define 'public' do |public|
+    public.vm.box = "debian/stretch64"
+    public.vm.network "private_network", ip: "192.168.0.10"
+  end
+  config.vm.define 'db' do |db|
+    db.vm.box = "fnando/dev-xenial64"
+    db.vm.network "private_network", ip: "192.168.0.11"
+  end
+end</code></pre>
+	    <aside class='notes'>Vagrant is increasingly used for local deployments, but it's quite useful defining infraestructure in a system-independent way</aside>
+	  </section>
+
+	  <section><h1>... to the nuts and bolts ... </h1>
+	    <pre><code>- hosts: "{{target}}"
+  sudo: yes
+  tasks:
+    - name: install prerrequisites
+      command: apt-get update -y && apt-get upgrade -y
+      command: apt-get install aptitude python-apt -y
+    - name: install packages
+      apt: pkg={{ item}}
+      with_items:
+        - git 
+        - curl 
+        - build-essential 
+        - libssl-dev
+        - nodejs
+        - npm
+    - name: Create links
+      command: ln -s /usr/bin/nodejs /usr/bin/node
+      ignore_errors: yes
+    - name: Create profile
+copy: content="export PAPERTRAIL_PORT={{PAPERTRAIL_PORT}}; export PAPERTRAIL_HOST={{PAPERTRAIL_HOST}}" dest=/home/cloudy/.profile
+	    </code></pre> <aside class='notes'>This will not fit in,
+	    but gives you an idea of all you can define so that you
+	    have infrastructure (services and applications, in this
+	      case) defined as code.</aside>
+
+          </section>
+
+	  <section><h1>... to the complex </h1>
+
+	    <pre><code>FROM rabbitmq:latest
+LABEL version="0.1" maintainer='jjmerelo@gmail.com'
+RUN apt-get update && apt-get upgrade -y && apt-get install -y python3 python3-pip 
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1\
+    && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+ADD requirements.txt ./
+RUN pip3 install --no-cache-dir -r requirements.txt
+WORKDIR /home/app
+ADD create-user-rmq.sh cliente-con-celery.py PlatziAgenda.py PlatziTareas.py SlackComandos.py PlatziSlack.py ./
+RUN mkdir data
+ADD data/cursos.json data/cursos.json
+CMD ./create-user-rmq.sh && celery -A PlatziTareas worker --loglevel=info & ./cliente-con-celery.py
+	    </code></pre>
+	  </section>
+	</section>
+
+	<section>
+	  <section data-background='https://live.staticflickr.com/9/13718651_93c12daa40_o_d.jpg'>
+	    <h1>Discrete releases ⇒ Continuous integration/deployments</h1>
+
+	    <aside class='notes'>Describing infraestructure as code allows continuous testing, integration of new features, an deployment. Cycles include the whole team, from systems to test.</aside>
+	  </section>
+	  
+          <section data-background='https://live.staticflickr.com/7890/47557956611_040dbc597e_k_d.jpg'><h1><strong>Idempotent</strong> deployments</h1>
+            <aside class='notes'>Explaining <a
+        href='https://puppet.com/blog/idempotence-not-just-a-big-and-scary-word'>idempotence
+          in cloud deployments</a> and why it matters. </aside>
+        </section>
+
+	  <section data-background='https://live.staticflickr.com/5685/20707800708_3fb4009885_k_d.jpg'><h2>Avoiding <em>works-for-me-ism</em></h2>
+	      <pre><code>os:
+  - linux
+services:
+  - docker
+install:
+  - util/travis-build.sh
+script:
+  - util/travis-test.sh
+matrix:
+    include:
+        - env: BUILDENV=whateverable
+        - env: BUILDENV=docker</code></pre>
+
+	      <aside class='notes'>This is just a excerpt of the conf file for the perl 6 language, but shows how continuous integration checks that everything is OK for everyone, before you decide to deploy. You can hook it to GitHub.</aside>
+	  </section>
+	  
+	  <section data-background='https://live.staticflickr.com/7818/40596683963_bf2a4e3d21_k_d.jpg'><h1>DevOps ⇒ Development + QA + Operations</h1>
+	  </section>
+	</section>
+
+	<section data-background='https://live.staticflickr.com/7832/47513478812_a7eba33ec7_k_d.jpg'>
+          <h1>New/old languages on the block</h1>
+          <h2 class='fragment'>Go for insfrastructure</h2>
+          <h2 class='fragment'>Full-stack Javascript</h2>
+        </section>
+        
+        </section>
+
+        <section>
+          <section
+          data-background='https://live.staticflickr.com/4855/32138357728_3cd84f40ca_k_d.jpg'>
+          <h1><strong>Orchestration</strong> of resources</h1>
+          <aside class='notes'>A bit of reading about <a
+            href='https://medium.freecodecamp.org/how-to-choose-the-right-container-orchestration-and-how-to-deploy-it-41844021c241'>container orchestration</a></aside>
+          </section>
+
+          <section><h2>Kubernetes definition</h2>
+            <pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: twocontainers
+spec:
+  containers:
+  - name: sise
+    image: mhausenblas/simpleservice:0.5.0
+    ports:
+    - containerPort: 9876
+  - name: shell
+    image: centos:7
+    command:
+      - "bin/bash"
+      - "-c"
+- "sleep 10000"
+            </code></pre>
+            <aside class='notes'>Taken from
+            https://github.com/openshift-evangelists/kbe/blob/master/specs/pods/pod.yaml,
+            we need to use kubectl over this to create a deployment;
+              you can then use any of the pods to work on.</aside>
+          </section>
+          
+              <section data-background='https://live.staticflickr.com/54/144637792_1a0d2d426e_o_d.jpg'><h1>To create event-based
+            architectures</h1></section>
+        
+        <section data-background='https://live.staticflickr.com/904/40975817774_92c20b5358_k_d.jpg'><h1>Via <strong>distributed</strong>
+            configuration</h1>
+        </section>
+
+        <section
+          data-background='https://live.staticflickr.com/7906/40591935953_05479fa79a_o_d.jpg'><h1>To
+            create a <strong>service mesh</strong></h1></section>
+
+        <section data-background='https://live.staticflickr.com/7877/32615538217_f829ed7efe_o_d.jpg'><h1>That includes diverse <strong>levels</strong>
+          of virtualization</h1></section>
+
+        <section><h1>And serverless computing</h1>
+          <pre><code>module.exports.hello = async (event, context) => {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: 'Expecto Petronum',
+      input: event,
+    }),
+  };
+};</code></pre></section>
+
+        </section>
+
+        <section>
+          <section data-background='https://live.staticflickr.com/7912/33487563868_3203f25397_k_d.jpg'><h1><strong>Everything as a service</strong></h1>
+            <pre><code>sub MAIN( $subscription-id, $token-json ) {
+    my $token = from-json( $token-json.IO.slurp )&lt;access_token>;
+    my $ua = HTTP::UserAgent.new;
+    $ua.timeout = 10;
+    my $res = $ua.get( "https://management.azure.com/subscriptions/$subscription-id/locations?api-version=2016-06-01",
+                       Authorization => "Bearer $token",
+                       Content-Type => "application/json");
+    if $res.is-success { # stuff happens
+    } else {
+        say "Didn't work: $res";
+    }
+}</code></pre>
+            <aside class='notes'>Meaning you won't have to worry about
+          maintaining your service. You will only have to worry about
+              paying the bills.</aside>
+          </section>
+
+          <section data-background='https://live.staticflickr.com/7851/32440899377_e7da8a9fea_k_d.jpg'>
+            <h1>AI as a service</h1>
+            <pre><code>const uriBase =
+      "https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect"
+    const imageUrl =
+      "https://upload.wikimedia.org/wikipedia/commons/3/37/Dagestani_man_and_woman.jpg"
+    const params = "?returnFaceAttributes=age,gender,headPose,smile,facialHair," +
+        "glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise"
+    const uri = uriBase + params
+    const imageUrlEnc = "{\"url\":\"" + imageUrl + "\"}"
+// .. later 
+    req.Header.Add("Content-Type", "application/json") 
+    req.Header.Add("Ocp-Apim-Subscription-Key", subscriptionKey)
+    resp, err := client.Do(req)
+            </code></pre>
+            <aside class='notes'>From the most simple like recognizing
+            images to the most complex like analyzing feelings or
+            creating complex dataflows for processing data in real
+            time, the cloud provides programming interfaces to use
+              them easily and efficiently. Take example from here: https://docs.microsoft.com/es-es/azure/cognitive-services/face/quickstarts/go</aside>
+          </section>
+        </section>
+
+        <section data-background='https://live.staticflickr.com/79/237812005_679fb98189_o_d.jpg'><h1>Your next applications will be <strong>born</strong> in the
+          cloud</h1>
+        </section>
+        
+        <section
+          data-background='https://live.staticflickr.com/1474/25017070362_3ec115d2e5_k_d.jpg'><h1>And
+          we need to change <strong>software engineering</strong>
+          methods to reflect that</h1>
+        </section>
+
+
+        <!-- Credits  -->
         <section><h1>Credits</h1>
           <ul class='credits'>
             <li><a
