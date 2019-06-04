@@ -51,17 +51,31 @@
 
 	  <section data-background='https://live.staticflickr.com/2143/1576388303_3b60d5c088_o_d.jpg'>
 	    <h1>Fast tensor arithmetic</h1>
-	    <aside class='notes'>Multiply-accumulate arrays, or vectors. That's basically it. That is what TensorFlow does, and is the basis of most neural network algorithms.</aside>
+	    <h2 class='fragment'>Done fast</h2>
+	    <aside class='notes'>Multiply-accumulate arrays, or vectors. That's basically it. That is what TensorFlow does, and is the basis of most neural network algorithms. It's floating point arithmetic, but you can also use limited precision if you want.
+	    </aside>
+	  </section>
+
+	  <section><h1>A bit of TensorFlow: <code>concat</code></h1>
+	    <pre><code>if len(values) == 1:
+    with ops.name_scope(name) as scope:
+      ops.convert_to_tensor(
+          axis, name="concat_dim",
+          dtype=dtypes.int32).get_shape().assert_is_compatible_with(
+              tensor_shape.scalar())
+      return identity(values[0], name=scope)
+  return gen_array_ops.concat_v2(values=values, axis=axis, name=name)</code></pre>
+
+	    <aside class='notes'>Also, it's in Python. </aside>
 	  </section>
 	  
           <section><h1>The law stops here</h1>
             <img src='img/f6.jpg' alt="Moore's law and beyond">
-          <aside class='notes'>Taken from <a
-          href='https://cacm.acm.org/magazines/2019/2/234352-a-new-golden-age-for-computer-architecture/fulltext'>Hennesy
-            and Patterson's article</a> on the golden era of computer
-          architecture. Today Moore's prediction is 15 times bigger
-          than actual density. So this calls for new solutions for
-            today's computing and power hungry applications.</aside>
+            <aside class='notes'>Taken from <a href='https://cacm.acm.org/magazines/2019/2/234352-a-new-golden-age-for-computer-architecture/fulltext'>Hennesy
+		and Patterson's article</a> on the golden era of computer
+              architecture. Today Moore's prediction is 15 times bigger
+              than actual density. So this calls for new solutions for
+              today's computing and power hungry applications.</aside>
           </section>
 
           <section
@@ -627,22 +641,22 @@ alt='troncos y nubes'><h1>Using kappa and other architectures</h1>
           </ul>
         </section>
         
-			</div>
-		</div>
+</div>
+</div>
 
-		<script src="js/reveal.js"></script>
+<script src="js/reveal.js"></script>
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-		 Reveal.initialize({
-                   height: 800,
-                   width: '95%',
-		   controls: true,
-		   progress: true,
-		   history: true,
-		   dependencies: [
+<script>
+  // More info about config & dependencies:
+  // - https://github.com/hakimel/reveal.js#configuration
+  // - https://github.com/hakimel/reveal.js#dependencies
+  Reveal.initialize({
+  height: 800,
+  width: '95%',
+  controls: true,
+  progress: true,
+  history: true,
+  dependencies: [
 		     { src: 'plugin/notes/notes.js', async: true },
 		     { src: 'plugin/highlight/highlight.js', async: true }
 		   ]

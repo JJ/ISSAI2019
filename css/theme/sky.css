@@ -22,7 +22,7 @@ body {
 
 .reveal {
   font-family: "Open Sans", sans-serif;
-  font-size: 40px;
+  font-size: 36px;
   font-weight: normal;
   color: #333; }
 
@@ -55,7 +55,7 @@ body {
   font-family: "Quicksand", sans-serif;
   font-weight: normal;
   line-height: 1.2;
-  letter-spacing: -0.08em;
+  letter-spacing: -0.05em;
   text-shadow: none;
   word-wrap: break-word; }
 
