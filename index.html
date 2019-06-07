@@ -387,12 +387,26 @@
 	  <section><h1>Communicating sequential processes</h1>
 	    <h1 class='fragment'><strong>Stateless</strong> process writes to/read from <strong>channels</strong></h1> 
 	  </section>
-	  <section><h1><strong>Stateless</strong>⇒ 1 to 1 mapping input/output</h1>
+	  <section><h1>Example in Go: <code>KarvPrime/NeuroNet</code></h1>
+	    <pre><code>	for ; activeWorkers > 0; activeWorkers-- {
+				id := &lt;-core.outputChannel
+				if mode == "train" {
+					for index, element := range core.networks[id].GetState() {
+						core.connections[index].AddWeighedDiff(core.state[index].GetState(), element.GetState(), activeWorkers)
+					}
+				}
+}
+	    </code></pre>
+	    <aside class='notes'>Taken from <a href='https://github.com/KarvPrime/NeuroNet/blob/master/NeuroNet/Core/Core.go'>here</a></aside>
+	  </section>
+	  
+ 	  <section><h1><strong>Stateless</strong>⇒ 1 to 1 mapping input/output</h1>
 	    <h2 class='fragment'>For <strong>all</strong> functions.</h2>
 	  </section>
 	</section>
 
 
+	<section><!-- Let's get to neural nets -->
 	  <section data-background='https://live.staticflickr.com/1870/44318581362_aaf64a96dc_k_d.jpg'><h1>Cloud computing ⇒ Working with <strong>virtualized</strong>
               resources</h1>
 
@@ -429,13 +443,42 @@
           </section>
 	</section>
 
-	<section data-background='https://live.staticflickr.com/87/241952383_f413b93fdc_o_d.jpg'>
-	  <h1>Everything starts with git</h1>
-	  <aside class='notes'>Source control systems are not simply a convenience for developing software. They are the backbone of software development in the cloud, using the actions of commits and push as triggers for workflows that eventually end in deployment.</aside>
-	</section>
+	
 	<section>
+
+	  <section data-background='https://live.staticflickr.com/87/241952383_f413b93fdc_o_d.jpg'> <!-- new concepts -->
+	    <h1>Everything starts with git</h1>
+	    <aside class='notes'>Source control systems are not simply a convenience for developing software. They are the backbone of software development in the cloud, using the actions of commits and push as triggers for workflows that eventually end in deployment.</aside>
+	  </section>
+
+	  <section data-background='https://live.staticflickr.com/1866/43650675344_3dbf4cc3e5_k_d.jpg'>
+	    <h1>Containers isolate resources</h1>
+	  </section>
+
+	  <section>
+	    <h1>Describe once, deploy everywhere</h1>
+	    <aside class='notes'>That is one of the main points of
+	    Dockerfiles: create a single way of distributing software
+	      with all that's needed to make it work</aside>
+	  </section>
+
+	  <section data-background='img/keras-dockerfile.png'><h1>Keep
+	      Keras for tomorrow</h1>
+	    <aside class='notes'>Taken
+	    from <a href='https://github.com/keras-team/keras/blob/master/docker/Dockerfile'>This
+		official Dockerfile</a></aside>
+	  </section>
+	  
+	  <section data-background='https://live.staticflickr.com/7832/47513478812_a7eba33ec7_k_d.jpg'>
+            <h1>New/old languages on the block</h1>
+            <h2 class='fragment'>Go for insfrastructure</h2>
+            <h2 class='fragment'>Full-stack Javascript</h2>
+          </section>
+        
+
           <section
-             data-background='https://live.staticflickr.com/7805/32615246827_574b6dbbbd_h_d.jpg'><h1>Infrastructure
+             data-background='https://live.staticflickr.com/7805/32615246827_574b6dbbbd_h_d.jpg'><h1>Key:
+             Infrastructure
               as <strong>code</strong></h1></section>
 
 	  <section><h1>From the simple...</h1>
@@ -446,7 +489,8 @@ az vm create -g CCGroupEU -n bobot --image UbuntuLTS
 	    <aside class='notes'>Using a simple shell script to tap the API of Azure and create a virtual machine with Ubuntu.</aside>
 	  </section>
 
-	  <section><h1>... to the slightly more complex ...</h1>
+	  <section data-background='https://live.staticflickr.com/1866/43650675344_3dbf4cc3e5_k_d.jpg'>
+	    <h1>... to the slightly more complex ...</h1>
 	    <pre><code>{
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
@@ -518,8 +562,21 @@ ADD data/cursos.json data/cursos.json
 CMD ./create-user-rmq.sh && celery -A PlatziTareas worker --loglevel=info & ./cliente-con-celery.py
 	    </code></pre>
 	  </section>
-	</section>
 
+	  <section><h1>Containerizing Spark</h1>
+	    <pre><code>RUN apk add --no-cache curl bash openjdk8-jre python3 py-pip nss \
+      && chmod +x *.sh \
+      && wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
+      && tar -xvzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
+      && mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark \
+&& rm spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz 
+	    </code></pre>
+	    <aside class='notes'>A helful and
+	    versioned <a href='https://github.com/big-data-europe/docker-spark'>Docker
+		container with Spark</a></aside>
+	  </section>
+	</section>
+	
 	<section>
 	  <section data-background='https://live.staticflickr.com/9/13718651_93c12daa40_o_d.jpg'>
 	    <h1>Discrete releases ⇒ Continuous integration/deployments</h1>
@@ -550,32 +607,17 @@ matrix:
 	      <aside class='notes'>This is just a excerpt of the conf file for the perl 6 language, but shows how continuous integration checks that everything is OK for everyone, before you decide to deploy. You can hook it to GitHub.</aside>
 	  </section>
 	  
-	  <section data-background='https://live.staticflickr.com/7818/40596683963_bf2a4e3d21_k_d.jpg'><h1>DevOps ⇒ Development + QA + Operations</h1>
+	  <section data-background='https://live.staticflickr.com/7818/40596683963_bf2a4e3d21_k_d.jpg'>
+	    <h1>DevOps ⇒ Development + QA + Operations</h1>
+	  </section>
+
+	  <section><h1>We need AIOps</h1>
+	    <h2 class='fragment'>For reproductible, reliable, AI
+	      deployments.</h2>
+	    <aside class='notes'>Even if you're working in
+	      science. This will still help</aside>
 	  </section>
 	</section>
-
-	<section> <!-- new concepts -->
-	  <section>
-	    <h1>Containers isolate resources</h1>
-	  </section>
-
-	  <section>
-	    <h1>Describe once, deploy everywhere</h1>
-	    <aside class='notes'>That is one of the main points of
-	    Dockerfiles: create a single way of distributing software
-	      with all that's needed to make it work</aside>
-	  </section>
-
-	  <section><h1>Keep Keras for tomorrow</h1>
-	  </section>
-	  
-	  <section data-background='https://live.staticflickr.com/7832/47513478812_a7eba33ec7_k_d.jpg'>
-            <h1>New/old languages on the block</h1>
-            <h2 class='fragment'>Go for insfrastructure</h2>
-            <h2 class='fragment'>Full-stack Javascript</h2>
-          </section>
-        
-        </section>
 
         <section>
           <section
@@ -609,7 +651,7 @@ spec:
               you can then use any of the pods to work on.</aside>
           </section>
           
-              <section data-background='https://live.staticflickr.com/54/144637792_1a0d2d426e_o_d.jpg'><h1>To create event-based
+          <section data-background='https://live.staticflickr.com/54/144637792_1a0d2d426e_o_d.jpg'><h1>To create event-based
             architectures</h1></section>
         
         <section data-background='https://live.staticflickr.com/904/40975817774_92c20b5358_k_d.jpg'><h1>Via <strong>distributed</strong>
@@ -623,7 +665,7 @@ spec:
         <section data-background='https://live.staticflickr.com/7877/32615538217_f829ed7efe_o_d.jpg'><h1>That includes diverse <strong>levels</strong>
           of virtualization</h1></section>
 
-        <section><h1>And serverless computing</h1>
+        <section><h1>... that includes serverless computing</h1>
           <pre><code>module.exports.hello = async (event, context) => {
   return {
     statusCode: 200,
@@ -637,23 +679,6 @@ spec:
         </section>
 
         <section>
-          <section data-background='https://live.staticflickr.com/7912/33487563868_3203f25397_k_d.jpg'><h1><strong>Everything as a service</strong></h1>
-            <pre><code>sub MAIN( $subscription-id, $token-json ) {
-    my $token = from-json( $token-json.IO.slurp )&lt;access_token>;
-    my $ua = HTTP::UserAgent.new;
-    $ua.timeout = 10;
-    my $res = $ua.get( "https://management.azure.com/subscriptions/$subscription-id/locations?api-version=2016-06-01",
-                       Authorization => "Bearer $token",
-                       Content-Type => "application/json");
-    if $res.is-success { # stuff happens
-    } else {
-        say "Didn't work: $res";
-    }
-}</code></pre>
-            <aside class='notes'>Meaning you won't have to worry about
-          maintaining your service. You will only have to worry about
-              paying the bills.</aside>
-          </section>
 
           <section data-background='https://live.staticflickr.com/7851/32440899377_e7da8a9fea_k_d.jpg'>
             <h1>AI as a service</h1>
@@ -684,7 +709,7 @@ spec:
         
         <section
           data-background='https://live.staticflickr.com/1474/25017070362_3ec115d2e5_k_d.jpg'><h1>And
-          we need to change <strong>software engineering</strong>
+          we need to change <strong>our AI practice</strong>
           methods to reflect that</h1>
         </section>
 
@@ -745,29 +770,8 @@ spec:
 	      perfectamente con lo anterior.</aside>
 	      </section>
 
-	      <section
-	      data-background='https://farm1.staticflickr.com/165/424839429_a378f13117_b_d.jpg'
-alt='troncos y nubes'><h1>Using kappa and other architectures</h1>
-		<aside class='notes'>Por ejemplo, la <a
-		  href='http://milinda.pathirage.org/kappa-architecture.com/'>arquitectura
-	      Kappa</a>, en la que todo es un flujo pero donde el
-	      elemento central es el log o registro, es un tipo de
-	      arquitectura de procesamiento de datos que se adapta a
-	      la nube. Y que hay que ir aprendiendo: Kappa, Kafka, y
-	      cosas como Apache Samza o Flink o cosas por el
-	      estilo. Nuevas formas de computación, nuevas formas de
-		  procesamiento de datos, traídas por la nube,
-		  incluyendo <em>big data</em>em> o <em>data as a
-	      service</em>, plataformas que ofrecen integración de
-	      datos de diferentes fuentes, incluyendo datos
-	      abiertos. Por ejemplo, sería interesante integrar los
-		  <a href='http://opendata.ugr.es'>datos de la
-	      UGR</a>, con los de otras universidades para ver
-	      tendencias en investigación o en matriculación en la
-	      universidad y ofrecerlo como servicio. </aside>
-	      </section>
-
-              <section><img
+              <section><h1>Kappa and other architectures</h1>
+		<img
         src='https://jonboulineau.me/assets/images/kappa_simple.jpg'
         alt='Kappa architecture'>
                 <p>Image by <a
@@ -775,7 +779,6 @@ alt='troncos y nubes'><h1>Using kappa and other architectures</h1>
                   Mittal</a></p>
               </section>
         </section>
-
 
 
         <!-- Credits  -->
