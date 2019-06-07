@@ -22,7 +22,7 @@ body {
 
 .reveal {
   font-family: "Open Sans", sans-serif;
-  font-size: 32px;
+  font-size: 26px;
   font-weight: normal;
   color: #333; }
 
@@ -61,7 +61,7 @@ body {
 
 .reveal h1 {
     font-family: 'Nunito', sans-serif;
-    font-size: 3.77em;
+    font-size: 3.5em;
 }
 
 .reveal h2 {
